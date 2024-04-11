@@ -27,10 +27,6 @@ class Bots {
                     [
                         'words' => ['date'],
                         'response' => 'Pokemon est sortie le 27 Février 1996.'
-                    ],
-                    [
-                        'words' => ['poke'],
-                        'response' => $this->getFirst25Pokemon()
                     ]
                 ]
             ],
@@ -64,6 +60,24 @@ class Bots {
                     ]
                 ]
             ],
+            [
+              'id' => 6,
+              'name' => 'PokeHelper',
+              'avatar' => 'http://localhost:81/pokehelper.png',
+              'actions' => [
+                  [
+                      'words' => ['help'],
+                      'response' => 'Voici les commandes : 
+                       hello
+                      / region
+                      / date
+                      / nom
+                      / api1
+                      / api2
+                      / api3.'
+                  ]
+              ]
+          ],
         ];
 
         return $bots;
@@ -96,38 +110,5 @@ class Bots {
     protected function run() {
         $this->header();
         $this->ifMethodExist();
-    }
-
-    protected function getFirst25Pokemon() {
-        $url = 'https://pokeapi.co/api/v2/pokemon/?limit=25';
-        $response = $this->makeRequest($url);
-
-        if ($response) {
-            $data = json_decode($response, true);
-            $pokemonNames = array_column($data['results'], 'name');
-            return $pokemonNames;
-        } else {
-            return 'Erreur lors de la récupération des données des Pokémon.';
-        }
-    }
-
-    protected function makeRequest($url) {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_HTTPHEADER => [
-                'Accept: application/json',
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return $response;
     }
 }
